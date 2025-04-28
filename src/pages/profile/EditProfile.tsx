@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -113,7 +112,8 @@ export default function EditProfile() {
                 title: "Profile updated",
                 description: "Your profile has been successfully updated."
               });
-              navigate("/");
+              // Don't navigate away, just stay on the same page
+              // This prevents the session from being lost
             }
           }
         );
@@ -126,7 +126,8 @@ export default function EditProfile() {
                 title: "Profile created",
                 description: "Your profile has been successfully created."
               });
-              navigate("/");
+              // Don't navigate away, just stay on the same page
+              // This prevents the session from being lost
             }
           }
         );
