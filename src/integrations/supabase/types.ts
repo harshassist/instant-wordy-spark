@@ -39,13 +39,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "applications_job_id_fkey"
-            columns: ["job_id"]
-            isOneToOne: false
-            referencedRelation: "jobs"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "applications_profile_id_fkey"
             columns: ["profile_id"]
             isOneToOne: false
@@ -56,49 +49,46 @@ export type Database = {
       }
       jobs: {
         Row: {
-          benefits: string[] | null
-          created_at: string
+          created_at: string | null
           description: string
           employment_type: Database["public"]["Enums"]["employment_type"]
           id: string
           is_active: boolean | null
+          is_approved: boolean | null
           location: string
-          organization_id: string
+          organization_id: string | null
           requirements: string[] | null
-          responsibilities: string[] | null
           salary_range: string | null
           title: string
-          updated_at: string
+          updated_at: string | null
         }
         Insert: {
-          benefits?: string[] | null
-          created_at?: string
+          created_at?: string | null
           description: string
           employment_type: Database["public"]["Enums"]["employment_type"]
           id?: string
           is_active?: boolean | null
+          is_approved?: boolean | null
           location: string
-          organization_id: string
+          organization_id?: string | null
           requirements?: string[] | null
-          responsibilities?: string[] | null
           salary_range?: string | null
           title: string
-          updated_at?: string
+          updated_at?: string | null
         }
         Update: {
-          benefits?: string[] | null
-          created_at?: string
+          created_at?: string | null
           description?: string
           employment_type?: Database["public"]["Enums"]["employment_type"]
           id?: string
           is_active?: boolean | null
+          is_approved?: boolean | null
           location?: string
-          organization_id?: string
+          organization_id?: string | null
           requirements?: string[] | null
-          responsibilities?: string[] | null
           salary_range?: string | null
           title?: string
-          updated_at?: string
+          updated_at?: string | null
         }
         Relationships: [
           {
