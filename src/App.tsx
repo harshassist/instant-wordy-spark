@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import EditProfile from "./pages/profile/EditProfile";
 import CreateJobForm from "./pages/jobs/CreateJobForm";
+import ApplyJob from "./pages/jobs/ApplyJob";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/profile/edit" element={<EditProfile />} />
           <Route path="/jobs/create" element={<CreateJobForm />} />
+          <Route path="/jobs/:jobId/apply" element={<ApplyJob />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
