@@ -1,11 +1,9 @@
-
 import * as React from 'react';
-
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useProfile, useUpdateProfile } from "@/hooks/useProfiles";
+import { useProfile, useUpdateProfile, useCreateProfile } from "@/hooks/useProfiles";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,6 +12,7 @@ import { toast } from "@/hooks/use-toast";
 import { Loader } from "lucide-react";
 import { ProfileSkillsInput } from "./components/ProfileSkillsInput";
 import { ProfileEducationInput } from "./components/ProfileEducationInput";
+import { supabase } from "@/integrations/supabase/client";
 
 const profileSchema = z.object({
   full_name: z.string().min(1, "Full name is required"),
@@ -30,8 +29,9 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export default function EditProfile() {
   const navigate = useNavigate();
-  const { data: profile, isLoading: isLoadingProfile } = useProfile("me");
+  const { data: profile, isLoading: isLoadingProfile } = useProfile();
   const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
+  const { mutate: createProfile, isPending: isCreating } = useCreateProfile();
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -62,27 +62,69 @@ export default function EditProfile() {
     }
   }, [profile, form]);
 
-  const onSubmit = (data: ProfileFormValues) => {
-    if (!profile?.id) return;
-    
-    updateProfile(
-      { id: profile.id, ...data },
-      {
-        onSuccess: () => {
-          toast({
-            title: "Profile updated",
-            description: "Your profile has been successfully updated."
-          });
-        },
-        onError: (error) => {
-          toast({
-            title: "Error",
-            description: "Failed to update profile. Please try again.",
-            variant: "destructive"
-          });
-        }
+  const onSubmit = async (data: ProfileFormValues) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "Error",
+          description: "You must be logged in to update your profile.",
+          variant: "destructive"
+        });
+        return;
       }
-    );
+
+      if (profile) {
+        updateProfile(
+          { id: profile.id, ...data },
+          {
+            onSuccess: () => {
+              toast({
+                title: "Profile updated",
+                description: "Your profile has been successfully updated."
+              });
+              navigate("/");
+            },
+            onError: (error) => {
+              toast({
+                title: "Error",
+                description: "Failed to update profile. Please try again.",
+                variant: "destructive"
+              });
+              console.error("Update error:", error);
+            }
+          }
+        );
+      } else {
+        createProfile(
+          data,
+          {
+            onSuccess: () => {
+              toast({
+                title: "Profile created",
+                description: "Your profile has been successfully created."
+              });
+              navigate("/");
+            },
+            onError: (error) => {
+              toast({
+                title: "Error",
+                description: "Failed to create profile. Please try again.",
+                variant: "destructive"
+              });
+              console.error("Create error:", error);
+            }
+          }
+        );
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   if (isLoadingProfile) {
@@ -95,7 +137,9 @@ export default function EditProfile() {
 
   return (
     <div className="container max-w-2xl py-8">
-      <h1 className="text-2xl font-bold mb-6">Edit Profile</h1>
+      <h1 className="text-2xl font-bold mb-6">
+        {profile ? "Edit Profile" : "Create Profile"}
+      </h1>
       
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -231,15 +275,15 @@ export default function EditProfile() {
             </Button>
             <Button 
               type="submit"
-              disabled={isUpdating}
+              disabled={isUpdating || isCreating}
             >
-              {isUpdating ? (
+              {(isUpdating || isCreating) ? (
                 <>
                   <Loader className="mr-2 h-4 w-4 animate-spin" />
-                  Saving...
+                  {profile ? "Saving..." : "Creating..."}
                 </>
               ) : (
-                'Save Changes'
+                profile ? 'Save Changes' : 'Create Profile'
               )}
             </Button>
           </div>
