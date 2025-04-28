@@ -1,4 +1,6 @@
+
 import * as React from 'react';
+
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -61,17 +63,18 @@ export default function EditProfile() {
   }, [profile, form]);
 
   const onSubmit = (data: ProfileFormValues) => {
+    if (!profile?.id) return;
+    
     updateProfile(
-      { ...data },
+      { id: profile.id, ...data },
       {
         onSuccess: () => {
           toast({
             title: "Profile updated",
             description: "Your profile has been successfully updated."
           });
-          navigate("/"); // optional - go back to home after save
         },
-        onError: () => {
+        onError: (error) => {
           toast({
             title: "Error",
             description: "Failed to update profile. Please try again.",
@@ -93,10 +96,153 @@ export default function EditProfile() {
   return (
     <div className="container max-w-2xl py-8">
       <h1 className="text-2xl font-bold mb-6">Edit Profile</h1>
+      
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* Form fields here - unchanged */}
-          {/* ... (same as your working version) */}
+          <FormField
+            control={form.control}
+            name="full_name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Full Name *</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="headline"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Headline</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="bio"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Bio</FormLabel>
+                <FormControl>
+                  <Textarea {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="location"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Location *</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="experience_years"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Years of Experience *</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="number" 
+                    {...field} 
+                    onChange={e => field.onChange(parseInt(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="education"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Education</FormLabel>
+                <FormControl>
+                  <ProfileEducationInput 
+                    value={field.value || []} 
+                    onChange={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="skills"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Skills *</FormLabel>
+                <FormControl>
+                  <ProfileSkillsInput 
+                    value={field.value || []} 
+                    onChange={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="cv_url"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>CV URL</FormLabel>
+                <FormControl>
+                  <Input {...field} type="url" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex justify-end gap-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate("/")}
+            >
+              Cancel
+            </Button>
+            <Button 
+              type="submit"
+              disabled={isUpdating}
+            >
+              {isUpdating ? (
+                <>
+                  <Loader className="mr-2 h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                'Save Changes'
+              )}
+            </Button>
+          </div>
         </form>
       </Form>
     </div>
