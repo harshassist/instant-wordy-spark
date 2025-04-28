@@ -1,4 +1,3 @@
-
 export type Json =
   | string
   | number
@@ -26,6 +25,10 @@ export interface Database {
           created_at: string
           updated_at: string
           user_id: string
+          education_level: string | null
+          subject_expertise: string | null
+          years_of_experience: number | null
+          preferred_location: string | null
         }
         Insert: {
           id?: string
@@ -42,6 +45,10 @@ export interface Database {
           created_at?: string
           updated_at?: string
           user_id: string
+          education_level?: string | null
+          subject_expertise?: string | null
+          years_of_experience?: number | null
+          preferred_location?: string | null
         }
         Update: {
           id?: string
@@ -58,6 +65,10 @@ export interface Database {
           created_at?: string
           updated_at?: string
           user_id?: string
+          education_level?: string | null
+          subject_expertise?: string | null
+          years_of_experience?: number | null
+          preferred_location?: string | null
         }
       }
       organizations: {

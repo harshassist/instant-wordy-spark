@@ -32,7 +32,15 @@ const profileSchema = z.object({
     .optional(),
   education: z.array(z.string()).optional(),
   skills: z.array(z.string()).min(1, "At least one skill is required"),
-  cv_url: z.string().optional()
+  cv_url: z.string().optional(),
+  // New fields
+  education_level: z.string().optional(),
+  subject_expertise: z.string().optional(),
+  years_of_experience: z.number()
+    .min(0, "Years of experience must be 0 or greater")
+    .max(50, "Years of experience must be 50 or less")
+    .optional(),
+  preferred_location: z.string().optional()
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
@@ -54,7 +62,12 @@ export default function EditProfile() {
       experience_years: 0,
       education: [],
       skills: [],
-      cv_url: ""
+      cv_url: "",
+      // New fields with default values
+      education_level: "",
+      subject_expertise: "",
+      years_of_experience: 0,
+      preferred_location: ""
     }
   });
 
@@ -68,7 +81,12 @@ export default function EditProfile() {
         experience_years: profile.experience_years || 0,
         education: profile.education || [],
         skills: profile.skills || [],
-        cv_url: profile.cv_url || ""
+        cv_url: profile.cv_url || "",
+        // Set values for new fields from profile if they exist
+        education_level: profile.education_level || "",
+        subject_expertise: profile.subject_expertise || "",
+        years_of_experience: profile.years_of_experience || 0,
+        preferred_location: profile.preferred_location || ""
       });
     }
   }, [profile, form]);
@@ -189,6 +207,75 @@ export default function EditProfile() {
             </CardContent>
           </Card>
 
+          {/* Professional Details - New Section */}
+          <Card>
+            <CardContent className="pt-6 space-y-4">
+              <h2 className="text-lg font-semibold mb-4">Professional Details</h2>
+              
+              <FormField
+                control={form.control}
+                name="education_level"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Education Level</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Bachelor's, Master's, Ph.D., etc." />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="subject_expertise"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Subject Expertise</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Computer Science, Marketing, etc." />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="years_of_experience"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Years of Experience</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="number" 
+                        {...field} 
+                        onChange={e => field.onChange(parseInt(e.target.value) || 0)}
+                        min={0}
+                        max={50}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="preferred_location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Preferred Location</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="City, Country or Remote" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+
           {/* Qualifications */}
           <Card>
             <CardContent className="pt-6 space-y-4">
@@ -245,7 +332,7 @@ export default function EditProfile() {
                       <Input 
                         type="number" 
                         {...field} 
-                        onChange={e => field.onChange(parseInt(e.target.value))}
+                        onChange={e => field.onChange(parseInt(e.target.value) || 0)}
                         min={0}
                         max={50}
                       />

@@ -57,6 +57,10 @@ export const useCreateProfile = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
+      toast({
+        title: 'Success',
+        description: 'Profile created successfully.',
+      });
     },
     onError: (error) => {
       console.error('Create profile error:', error);
@@ -90,6 +94,10 @@ export const useUpdateProfile = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
+      toast({
+        title: 'Success',
+        description: 'Profile updated successfully.',
+      });
     },
     onError: (error) => {
       console.error('Update profile error:', error);
