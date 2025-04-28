@@ -140,15 +140,19 @@ export type Database = {
           created_at: string
           cv_url: string | null
           education: string[] | null
+          education_level: string | null
           experience_years: number | null
           full_name: string | null
           headline: string | null
           id: string
           location: string | null
+          preferred_location: string | null
           role: Database["public"]["Enums"]["user_role"]
           skills: string[] | null
+          subject_expertise: string | null
           updated_at: string
           user_id: string
+          years_of_experience: number | null
         }
         Insert: {
           bio?: string | null
@@ -156,15 +160,19 @@ export type Database = {
           created_at?: string
           cv_url?: string | null
           education?: string[] | null
+          education_level?: string | null
           experience_years?: number | null
           full_name?: string | null
           headline?: string | null
           id?: string
           location?: string | null
+          preferred_location?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           skills?: string[] | null
+          subject_expertise?: string | null
           updated_at?: string
           user_id: string
+          years_of_experience?: number | null
         }
         Update: {
           bio?: string | null
@@ -172,15 +180,19 @@ export type Database = {
           created_at?: string
           cv_url?: string | null
           education?: string[] | null
+          education_level?: string | null
           experience_years?: number | null
           full_name?: string | null
           headline?: string | null
           id?: string
           location?: string | null
+          preferred_location?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           skills?: string[] | null
+          subject_expertise?: string | null
           updated_at?: string
           user_id?: string
+          years_of_experience?: number | null
         }
         Relationships: []
       }
