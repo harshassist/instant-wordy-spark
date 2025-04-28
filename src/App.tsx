@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import EditProfile from "./pages/profile/EditProfile";
+import CreateJobForm from "./pages/jobs/CreateJobForm";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/profile/edit" element={<EditProfile />} />
+          <Route path="/jobs/create" element={<CreateJobForm />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
