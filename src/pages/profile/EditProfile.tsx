@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -13,13 +14,22 @@ import { Loader } from "lucide-react";
 import { ProfileSkillsInput } from "./components/ProfileSkillsInput";
 import { ProfileEducationInput } from "./components/ProfileEducationInput";
 import { getCurrentUser } from "@/lib/fake-auth";
+import { Card, CardContent } from "@/components/ui/card";
+
+const phoneRegex = /^\+?[1-9]\d{1,14}$/;
 
 const profileSchema = z.object({
   full_name: z.string().min(1, "Full name is required"),
+  phone_number: z.string()
+    .min(1, "Phone number is required")
+    .regex(phoneRegex, "Please enter a valid phone number"),
   headline: z.string().optional(),
-  bio: z.string().optional(),
+  bio: z.string().max(500, "Bio must be 500 characters or less").optional(),
   location: z.string().min(1, "Location is required"),
-  experience_years: z.number().min(0, "Experience years must be 0 or greater"),
+  experience_years: z.number()
+    .min(0, "Experience years must be 0 or greater")
+    .max(50, "Experience years must be 50 or less")
+    .optional(),
   education: z.array(z.string()).optional(),
   skills: z.array(z.string()).min(1, "At least one skill is required"),
   cv_url: z.string().optional()
@@ -37,6 +47,7 @@ export default function EditProfile() {
     resolver: zodResolver(profileSchema),
     defaultValues: {
       full_name: "",
+      phone_number: "",
       headline: "",
       bio: "",
       location: "",
@@ -125,129 +136,145 @@ export default function EditProfile() {
         {profile ? "Edit Profile" : "Create Profile"}
       </h1>
       
+      <p className="text-sm text-muted-foreground mb-6">
+        Fields marked with an asterisk (*) are required
+      </p>
+
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="full_name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Full Name *</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          {/* Personal Information */}
+          <Card>
+            <CardContent className="pt-6 space-y-4">
+              <FormField
+                control={form.control}
+                name="full_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full Name *</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="headline"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Headline</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="phone_number"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number *</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="+1234567890" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="bio"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Bio</FormLabel>
-                <FormControl>
-                  <Textarea {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Location *</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
 
-          <FormField
-            control={form.control}
-            name="location"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Location *</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* Qualifications */}
+          <Card>
+            <CardContent className="pt-6 space-y-4">
+              <h2 className="text-lg font-semibold mb-4">Qualifications</h2>
+              
+              <FormField
+                control={form.control}
+                name="skills"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Skills *</FormLabel>
+                    <FormControl>
+                      <ProfileSkillsInput 
+                        value={field.value || []} 
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="experience_years"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Years of Experience *</FormLabel>
-                <FormControl>
-                  <Input 
-                    type="number" 
-                    {...field} 
-                    onChange={e => field.onChange(parseInt(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="education"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Education</FormLabel>
+                    <FormControl>
+                      <ProfileEducationInput 
+                        value={field.value || []} 
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
 
-          <FormField
-            control={form.control}
-            name="education"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Education</FormLabel>
-                <FormControl>
-                  <ProfileEducationInput 
-                    value={field.value || []} 
-                    onChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* Additional Information */}
+          <Card>
+            <CardContent className="pt-6 space-y-4">
+              <h2 className="text-lg font-semibold mb-4">Additional Information</h2>
+              
+              <FormField
+                control={form.control}
+                name="experience_years"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Years of Experience</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="number" 
+                        {...field} 
+                        onChange={e => field.onChange(parseInt(e.target.value))}
+                        min={0}
+                        max={50}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="skills"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Skills *</FormLabel>
-                <FormControl>
-                  <ProfileSkillsInput 
-                    value={field.value || []} 
-                    onChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="cv_url"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>CV URL</FormLabel>
-                <FormControl>
-                  <Input {...field} type="url" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="bio"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bio</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        {...field} 
+                        placeholder="Tell us about yourself..."
+                        className="resize-none"
+                        rows={4}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
 
           <div className="flex justify-end gap-4">
             <Button
