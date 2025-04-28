@@ -66,7 +66,9 @@ export default function SignupPage() {
       if (signUpError) throw signUpError;
       if (!authData.user) throw new Error("Failed to create user");
 
-      // Create user profile
+      // Important: The service_role key is needed to bypass RLS during signup
+      // Creating the profile from the server-side after signup is the better approach
+      // For now, we'll handle it in the client but with appropriate error handling
       const { error: profileError } = await supabase
         .from('profiles')
         .insert({
@@ -77,13 +79,19 @@ export default function SignupPage() {
 
       if (profileError) {
         console.error("Profile creation error:", profileError);
-        throw new Error("Failed to create user profile");
+        // Don't throw here, as the user account is already created
+        // We'll just notify the user that profile creation failed
+        toast({
+          variant: "destructive",
+          title: "Profile creation incomplete",
+          description: "Your account was created but profile setup failed. Please contact support.",
+        });
+      } else {
+        toast({
+          title: "Account created successfully",
+          description: "Please check your email to verify your account",
+        });
       }
-
-      toast({
-        title: "Account created successfully",
-        description: "Please check your email to verify your account",
-      });
 
       navigate("/login");
     } catch (error: any) {
