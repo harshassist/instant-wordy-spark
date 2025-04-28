@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import EditProfile from "./pages/profile/EditProfile";
 import CreateJobForm from "./pages/jobs/CreateJobForm";
 import ApplyJob from "./pages/jobs/ApplyJob";
+import SignupPage from "./pages/auth/SignupPage";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/profile/edit" element={<EditProfile />} />
           <Route path="/jobs/create" element={<CreateJobForm />} />
           <Route path="/jobs/:jobId/apply" element={<ApplyJob />} />
+          <Route path="/signup" element={<SignupPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
