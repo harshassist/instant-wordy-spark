@@ -120,6 +120,9 @@ export interface Database {
           is_approved: boolean
           created_at: string
           updated_at: string
+          school_level: string | null
+          subject_required: string | null
+          experience_required: string | null
         }
         Insert: {
           id?: string
@@ -134,6 +137,9 @@ export interface Database {
           is_approved?: boolean
           created_at?: string
           updated_at?: string
+          school_level?: string | null
+          subject_required?: string | null
+          experience_required?: string | null
         }
         Update: {
           id?: string
@@ -148,6 +154,9 @@ export interface Database {
           is_approved?: boolean
           created_at?: string
           updated_at?: string
+          school_level?: string | null
+          subject_required?: string | null
+          experience_required?: string | null
         }
       }
       applications: {

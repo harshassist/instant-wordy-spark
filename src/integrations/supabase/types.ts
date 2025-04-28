@@ -52,6 +52,7 @@ export type Database = {
           created_at: string | null
           description: string
           employment_type: Database["public"]["Enums"]["employment_type"]
+          experience_required: string | null
           id: string
           is_active: boolean | null
           is_approved: boolean | null
@@ -59,6 +60,8 @@ export type Database = {
           organization_id: string | null
           requirements: string[] | null
           salary_range: string | null
+          school_level: string | null
+          subject_required: string | null
           title: string
           updated_at: string | null
         }
@@ -66,6 +69,7 @@ export type Database = {
           created_at?: string | null
           description: string
           employment_type: Database["public"]["Enums"]["employment_type"]
+          experience_required?: string | null
           id?: string
           is_active?: boolean | null
           is_approved?: boolean | null
@@ -73,6 +77,8 @@ export type Database = {
           organization_id?: string | null
           requirements?: string[] | null
           salary_range?: string | null
+          school_level?: string | null
+          subject_required?: string | null
           title: string
           updated_at?: string | null
         }
@@ -80,6 +86,7 @@ export type Database = {
           created_at?: string | null
           description?: string
           employment_type?: Database["public"]["Enums"]["employment_type"]
+          experience_required?: string | null
           id?: string
           is_active?: boolean | null
           is_approved?: boolean | null
@@ -87,6 +94,8 @@ export type Database = {
           organization_id?: string | null
           requirements?: string[] | null
           salary_range?: string | null
+          school_level?: string | null
+          subject_required?: string | null
           title?: string
           updated_at?: string | null
         }

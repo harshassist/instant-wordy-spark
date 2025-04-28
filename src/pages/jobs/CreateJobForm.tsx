@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { Briefcase, MapPin, FileText, DollarSign, ListCheck } from "lucide-react"
+import { Briefcase, MapPin, FileText, DollarSign, ListCheck, BookOpen, GraduationCap, Clock } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -20,7 +20,10 @@ const formSchema = z.object({
   employment_type: z.enum(["full_time", "part_time", "contract", "temporary", "internship", "remote"], {
     required_error: "Please select an employment type"
   }),
-  requirements: z.string().optional()
+  requirements: z.string().optional(),
+  school_level: z.string().min(1, "School level is required"),
+  subject_required: z.string().min(1, "Subject is required"),
+  experience_required: z.string().optional()
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -37,20 +40,25 @@ export default function CreateJobForm() {
       description: "",
       salary_range: "",
       employment_type: undefined,
-      requirements: ""
+      requirements: "",
+      school_level: "",
+      subject_required: "",
+      experience_required: ""
     }
   })
 
   const onSubmit = async (data: FormValues) => {
     try {
-      // Fix: Ensure required fields are passed correctly and not as optional
       await createJob.mutateAsync({
-        title: data.title, // Explicitly pass as required
-        location: data.location, // Explicitly pass as required
-        description: data.description, // Explicitly pass as required
-        employment_type: data.employment_type, // Explicitly pass as required
-        salary_range: data.salary_range, // This can remain optional
+        title: data.title,
+        location: data.location,
+        description: data.description,
+        employment_type: data.employment_type,
+        salary_range: data.salary_range,
         requirements: data.requirements ? data.requirements.split(",").map(r => r.trim()) : [],
+        school_level: data.school_level,
+        subject_required: data.subject_required,
+        experience_required: data.experience_required,
         is_active: true,
         is_approved: false
       })
@@ -156,6 +164,70 @@ export default function CreateJobForm() {
                             placeholder="Enter requirements separated by commas..."
                             {...field}
                           />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  {/* New Fields */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="school_level"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center gap-2">
+                            <GraduationCap className="h-4 w-4" />
+                            School Level *
+                          </FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select school level" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="Primary">Primary</SelectItem>
+                              <SelectItem value="Secondary">Secondary</SelectItem>
+                              <SelectItem value="College">College</SelectItem>
+                              <SelectItem value="Other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="subject_required"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center gap-2">
+                            <BookOpen className="h-4 w-4" />
+                            Subject Required *
+                          </FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. Mathematics, English, Science" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="experience_required"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center gap-2">
+                          <Clock className="h-4 w-4" />
+                          Experience Required
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g. 3-5 years, 5+ years" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
