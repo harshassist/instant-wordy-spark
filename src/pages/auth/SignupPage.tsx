@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -51,7 +52,7 @@ export default function SignupPage() {
     try {
       setIsLoading(true);
 
-      const { data: authData, error: signUpError } = await supabase.auth.signUp({
+      const { error: signUpError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
@@ -62,7 +63,6 @@ export default function SignupPage() {
       });
 
       if (signUpError) throw signUpError;
-      if (!authData.user) throw new Error("Failed to create user");
 
       toast({
         title: "Account created successfully",
