@@ -14,6 +14,9 @@ import CreateJobForm from "./pages/jobs/CreateJobForm";
 import ApplyJob from "./pages/jobs/ApplyJob";
 import SignupPage from "./pages/auth/SignupPage";
 import LoginPage from "./pages/auth/LoginPage";
+import JobsPage from "./pages/jobs/JobsPage";
+import CandidatesPage from "./pages/candidates/CandidatesPage";
+import AboutPage from "./pages/about/AboutPage";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +29,9 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/jobs" element={<JobsPage />} />
+            <Route path="/candidates" element={<CandidatesPage />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route
               path="/profile/edit"
               element={
