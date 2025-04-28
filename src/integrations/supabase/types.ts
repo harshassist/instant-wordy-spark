@@ -155,6 +155,7 @@ export type Database = {
           headline: string | null
           id: string
           location: string | null
+          phone_number: string | null
           preferred_location: string | null
           role: Database["public"]["Enums"]["user_role"]
           skills: string[] | null
@@ -175,6 +176,7 @@ export type Database = {
           headline?: string | null
           id?: string
           location?: string | null
+          phone_number?: string | null
           preferred_location?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           skills?: string[] | null
@@ -195,6 +197,7 @@ export type Database = {
           headline?: string | null
           id?: string
           location?: string | null
+          phone_number?: string | null
           preferred_location?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           skills?: string[] | null

@@ -1,4 +1,5 @@
-// Toggle this to false before production
+
+// Toggle this to true for development with fake authentication data
 export const IS_FAKE_MODE = false;
 
 export const fakeUser = {

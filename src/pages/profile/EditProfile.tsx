@@ -13,8 +13,8 @@ import { toast } from "@/hooks/use-toast";
 import { Loader } from "lucide-react";
 import { ProfileSkillsInput } from "./components/ProfileSkillsInput";
 import { ProfileEducationInput } from "./components/ProfileEducationInput";
-import { getCurrentUser } from "@/lib/fake-auth";
 import { Card, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
 
 const phoneRegex = /^\+?[1-9]\d{1,14}$/;
 
@@ -47,6 +47,7 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export default function EditProfile() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { data: profile, isLoading: isLoadingProfile } = useProfile();
   const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
   const { mutate: createProfile, isPending: isCreating } = useCreateProfile();
@@ -75,6 +76,7 @@ export default function EditProfile() {
     if (profile) {
       form.reset({
         full_name: profile.full_name || "",
+        phone_number: profile.phone_number || "",
         headline: profile.headline || "",
         bio: profile.bio || "",
         location: profile.location || "",
@@ -93,7 +95,6 @@ export default function EditProfile() {
 
   const onSubmit = async (data: ProfileFormValues) => {
     try {
-      const { data: { user } } = await getCurrentUser();
       if (!user) {
         toast({
           title: "Error",

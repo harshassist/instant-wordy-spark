@@ -3,24 +3,19 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import type { Database } from '@/integrations/supabase/types'
 import { toast } from '@/hooks/use-toast'
-import { IS_FAKE_MODE, getFakeUser } from '@/lib/fake-auth'
+import { IS_FAKE_MODE } from '@/lib/fake-auth'
+import { useAuth } from '@/contexts/AuthContext'
 
 type Profile = Database['public']['Tables']['profiles']['Row']
 type ProfileInsert = Database['public']['Tables']['profiles']['Insert']
 type ProfileUpdate = Database['public']['Tables']['profiles']['Update']
 
-const getCurrentUser = async () => {
-  if (IS_FAKE_MODE) {
-    return getFakeUser();
-  }
-  return supabase.auth.getUser();
-};
-
 export const useProfile = () => {
+  const { user } = useAuth();
+  
   return useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
-      const { data: { user } } = await getCurrentUser();
       if (!user) throw new Error('Not authenticated');
 
       const { data, error } = await supabase
@@ -34,16 +29,17 @@ export const useProfile = () => {
       }
 
       return data;
-    }
+    },
+    enabled: !!user  // Only run the query if we have a user
   });
 };
 
 export const useCreateProfile = () => {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   
   return useMutation({
     mutationFn: async (newProfile: Omit<ProfileInsert, 'user_id'>) => {
-      const { data: { user } } = await getCurrentUser();
       if (!user) throw new Error('Not authenticated');
 
       const { data, error } = await supabase
@@ -75,10 +71,10 @@ export const useCreateProfile = () => {
 
 export const useUpdateProfile = () => {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   
   return useMutation({
     mutationFn: async ({ id, ...updates }: ProfileUpdate & { id: string }) => {
-      const { data: { user } } = await getCurrentUser();
       if (!user) throw new Error('Not authenticated');
 
       const { data, error } = await supabase
