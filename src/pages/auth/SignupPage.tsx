@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -52,7 +51,6 @@ export default function SignupPage() {
     try {
       setIsLoading(true);
 
-      // Sign up the user
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
@@ -66,32 +64,10 @@ export default function SignupPage() {
       if (signUpError) throw signUpError;
       if (!authData.user) throw new Error("Failed to create user");
 
-      // Important: The service_role key is needed to bypass RLS during signup
-      // Creating the profile from the server-side after signup is the better approach
-      // For now, we'll handle it in the client but with appropriate error handling
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: authData.user.id,
-          user_id: authData.user.id,
-          role: data.role,
-        });
-
-      if (profileError) {
-        console.error("Profile creation error:", profileError);
-        // Don't throw here, as the user account is already created
-        // We'll just notify the user that profile creation failed
-        toast({
-          variant: "destructive",
-          title: "Profile creation incomplete",
-          description: "Your account was created but profile setup failed. Please contact support.",
-        });
-      } else {
-        toast({
-          title: "Account created successfully",
-          description: "Please check your email to verify your account",
-        });
-      }
+      toast({
+        title: "Account created successfully",
+        description: "Please check your email to verify your account",
+      });
 
       navigate("/login");
     } catch (error: any) {
