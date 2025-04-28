@@ -1,6 +1,5 @@
-
 // Toggle this to false before production
-export const IS_FAKE_MODE = true;
+export const IS_FAKE_MODE = false;
 
 export const fakeUser = {
   id: '00000000-0000-0000-0000-000000000000',
