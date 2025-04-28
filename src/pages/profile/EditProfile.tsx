@@ -12,7 +12,7 @@ import { toast } from "@/hooks/use-toast";
 import { Loader } from "lucide-react";
 import { ProfileSkillsInput } from "./components/ProfileSkillsInput";
 import { ProfileEducationInput } from "./components/ProfileEducationInput";
-import { supabase } from "@/integrations/supabase/client";
+import { getCurrentUser } from "@/lib/fake-auth";
 
 const profileSchema = z.object({
   full_name: z.string().min(1, "Full name is required"),
@@ -64,7 +64,7 @@ export default function EditProfile() {
 
   const onSubmit = async (data: ProfileFormValues) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { user } } = await getCurrentUser();
       if (!user) {
         toast({
           title: "Error",
@@ -84,14 +84,6 @@ export default function EditProfile() {
                 description: "Your profile has been successfully updated."
               });
               navigate("/");
-            },
-            onError: (error) => {
-              toast({
-                title: "Error",
-                description: "Failed to update profile. Please try again.",
-                variant: "destructive"
-              });
-              console.error("Update error:", error);
             }
           }
         );
@@ -105,14 +97,6 @@ export default function EditProfile() {
                 description: "Your profile has been successfully created."
               });
               navigate("/");
-            },
-            onError: (error) => {
-              toast({
-                title: "Error",
-                description: "Failed to create profile. Please try again.",
-                variant: "destructive"
-              });
-              console.error("Create error:", error);
             }
           }
         );
