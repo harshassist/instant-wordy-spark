@@ -43,8 +43,13 @@ export default function CreateJobForm() {
 
   const onSubmit = async (data: FormValues) => {
     try {
+      // Fix: Ensure required fields are passed correctly and not as optional
       await createJob.mutateAsync({
-        ...data,
+        title: data.title, // Explicitly pass as required
+        location: data.location, // Explicitly pass as required
+        description: data.description, // Explicitly pass as required
+        employment_type: data.employment_type, // Explicitly pass as required
+        salary_range: data.salary_range, // This can remain optional
         requirements: data.requirements ? data.requirements.split(",").map(r => r.trim()) : [],
         is_active: true,
         is_approved: false
