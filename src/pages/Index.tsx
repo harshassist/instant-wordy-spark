@@ -9,7 +9,7 @@ import {
   Briefcase, 
   Handshake, 
   Info, 
-  Clock24, 
+  Clock, 
   Users 
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
