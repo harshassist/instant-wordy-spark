@@ -4,8 +4,13 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
+import LogoutButton from "@/components/auth/LogoutButton";
 
 const Header = () => {
+  const { user, loading } = useAuth();
+  const isAuthenticated = !!user;
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
@@ -54,12 +59,25 @@ const Header = () => {
         </NavigationMenu>
 
         <div className="flex items-center gap-2">
-          <Link to="/login">
-            <Button variant="outline">Login</Button>
-          </Link>
-          <Link to="/signup">
-            <Button>Sign Up</Button>
-          </Link>
+          {loading ? (
+            <Button variant="outline" disabled>Loading...</Button>
+          ) : isAuthenticated ? (
+            <div className="flex items-center gap-2">
+              <Link to="/profile/edit">
+                <Button variant="outline">Profile</Button>
+              </Link>
+              <LogoutButton />
+            </div>
+          ) : (
+            <>
+              <Link to="/login">
+                <Button variant="outline">Login</Button>
+              </Link>
+              <Link to="/signup">
+                <Button>Sign Up</Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
