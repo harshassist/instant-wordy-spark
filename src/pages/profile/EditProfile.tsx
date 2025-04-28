@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -14,7 +14,6 @@ import { Loader } from "lucide-react";
 import { ProfileSkillsInput } from "./components/ProfileSkillsInput";
 import { ProfileEducationInput } from "./components/ProfileEducationInput";
 
-// Define form validation schema
 const profileSchema = z.object({
   full_name: z.string().min(1, "Full name is required"),
   headline: z.string().optional(),
@@ -47,7 +46,6 @@ export default function EditProfile() {
     }
   });
 
-  // Update form when profile data is loaded
   React.useEffect(() => {
     if (profile) {
       form.reset({
