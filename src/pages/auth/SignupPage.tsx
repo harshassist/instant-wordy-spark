@@ -56,18 +56,29 @@ export default function SignupPage() {
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
+        options: {
+          data: {
+            role: data.role, // Store role in user metadata
+          },
+        },
       });
 
       if (signUpError) throw signUpError;
       if (!authData.user) throw new Error("Failed to create user");
 
-      // Create user profile with selected role
-      const { error: profileError } = await supabase.from("profiles").insert({
-        user_id: authData.user.id,
-        role: data.role,
-      });
+      // Create user profile
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert({
+          id: authData.user.id,
+          user_id: authData.user.id,
+          role: data.role,
+        });
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        console.error("Profile creation error:", profileError);
+        throw new Error("Failed to create user profile");
+      }
 
       toast({
         title: "Account created successfully",
@@ -75,7 +86,7 @@ export default function SignupPage() {
       });
 
       navigate("/login");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Signup error:", error);
       toast({
         variant: "destructive",
