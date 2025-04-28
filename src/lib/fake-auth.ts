@@ -21,3 +21,11 @@ export const getFakeUser = (): Promise<{ data: { user: AuthUser | null } }> => {
     }
   });
 };
+
+export const getCurrentUser = (): Promise<{ data: { user: AuthUser | null } }> => {
+  return Promise.resolve({
+    data: {
+      user: fakeUser
+    }
+  });
+};
