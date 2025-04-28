@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
@@ -12,10 +13,14 @@ import {
   Users 
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import Header from "@/components/layout/Header";
 
 const Index = () => {
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Header */}
+      <Header />
+      
       {/* Hero Section */}
       <section className="w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
         <div className="container max-w-6xl text-center">
