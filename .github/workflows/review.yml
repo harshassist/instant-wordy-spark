@@ -1,0 +1,24 @@
+name: Structure Review
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate important folders and files
+        run: |
+          echo "Checking for expected folders and files..."
+          test -d src || (echo "Missing src folder!" && exit 1)
+          test -d src/hooks || (echo "Missing src/hooks folder!" && exit 1)
+          test -d src/lib || (echo "Missing src/lib folder!" && exit 1)
+          test -f src/lib/database.ts || (echo "Missing database.ts!" && exit 1)
+          test -f src/lib/database.types.ts || (echo "Missing database.types.ts!" && exit 1)
+          test -d migrations || (echo "Missing migrations folder!" && exit 1)
+          echo "✅ Structure looks good!"
