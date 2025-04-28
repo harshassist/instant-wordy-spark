@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
@@ -214,7 +213,7 @@ const Index = () => {
             {/* Benefit 4 */}
             <div className="flex gap-4">
               <div className="p-3 bg-blue-100 rounded-full h-fit">
-                <Clock24 size={24} className="text-blue-700" />
+                <Clock size={24} className="text-blue-700" />
               </div>
               <div>
                 <h3 className="text-xl font-semibold mb-2">24/7 Support</h3>
