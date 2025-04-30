@@ -15,6 +15,7 @@ import ApplyJob from "./pages/jobs/ApplyJob";
 import SignupPage from "./pages/auth/SignupPage";
 import LoginPage from "./pages/auth/LoginPage";
 import JobsPage from "./pages/jobs/JobsPage";
+import JobDetailPage from "./pages/jobs/JobDetailPage";
 import CandidatesPage from "./pages/candidates/CandidatesPage";
 import AboutPage from "./pages/about/AboutPage";
 
@@ -30,6 +31,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/jobs" element={<JobsPage />} />
+            <Route path="/jobs/:jobId" element={<JobDetailPage />} />
             <Route path="/candidates" element={<CandidatesPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route
